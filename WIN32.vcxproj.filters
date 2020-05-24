@@ -163,9 +163,6 @@
     <ClCompile Include="Sensor.c">
       <Filter>Demo App Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source.c">
-      <Filter>Demo App Source\Blinky_Demo</Filter>
-    </ClCompile>
     <ClCompile Include="appController.c">
       <Filter>Demo App Source</Filter>
     </ClCompile>

@@ -13,10 +13,11 @@ void Sent_Upload_Message(LoraPayload payload);
 
 void LoraDriverTask(void* parameters) {
 
-	char ucRxData[50];
+	uint8_t ucRxData[50];
 	Param param = (Param) parameters;
 	MessageBufferHandle_t xMessageBuffer = param->xMessageBuffer1;
-	SemaphoreHandle_t semaphore = param->semaphore1;
+	//SemaphoreHandle_t semaphore = param->semaphore1;
+	
 
 	while (1) {
 
@@ -25,25 +26,32 @@ void LoraDriverTask(void* parameters) {
 			LoraPayload payload = createPayload();
 			payload->bytes = ucRxData;
 			payload->len = sizeof(ucRxData);
-			
-			if (xSemaphoreTake(semaphore, 500)) {
+
+			if (xSemaphoreTake(xSemaphore, 500)) {
 				Sent_Upload_Message(payload);
-				xSemaphoreGive(semaphore);
+				xSemaphoreGive(xSemaphore);
 			}
+			else {
+				printf("No semaphore\n");
+			}
+			vTaskDelay(500);
 		}
+	
 	}
 	vTaskDelete(NULL);
 }
 
 void Sent_Upload_Message(LoraPayload payload) {
-	printf("%s", payload->bytes);
+	printf("%s\n", payload->bytes);
 	destroyPayload(payload);
 }; 
 
 LoraPayload createPayload() {
-	LoraPayload payload = pvPortMalloc(sizeof(LoraPayload));
+	LoraPayload payload = pvPortMalloc(sizeof(struct LoraPayloadS));
+	payload->bytes = pvPortMalloc(sizeof(int8_t) * 20);
 	return payload;
 }
 void destroyPayload(LoraPayload payload) {
+	//vPortFree(payload->bytes);
 	vPortFree(payload);
 }

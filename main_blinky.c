@@ -57,7 +57,6 @@ static QueueHandle_t xQueue = NULL;
 
 /* A software timer that is started from the tick hook. */
 static TimerHandle_t xTimer = NULL;
-EventGroupHandle_t xEventGroup;
 
 /*-----------------------------------------------------------*/
 
@@ -65,41 +64,47 @@ EventGroupHandle_t xEventGroup;
 
 void main_blinky( void )
 {
+
 const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;	
 
-	Sensor sensor1 = createSensor();
-	Sensor sensor2 = createSensor();
-	Param param1 = createParam();
-	Param param2 = createParam();
-	Param param3 = createParam();
-	Param param4 = createParam();
-	MessageBufferHandle_t xMessageBuffer1;
-	xMessageBuffer1 = xMessageBufferCreate(100);
-	SemaphoreHandle_t semaphore1 = xSemaphoreCreateBinary();
+	static Sensor sensor1;
+	sensor1 = createSensor();
+	static Sensor sensor2;
+	sensor2 = createSensor();
+	static Param param1;
+	param1 = createParam();
+	static Param param2;
+	param2 = createParam();
+	static Param param3;
+	param3 = createParam();
+	static Param param4;
+	param4 = createParam();
+	static MessageBufferHandle_t xMessageBuffer1;
+	xMessageBuffer1 = xMessageBufferCreate(300);
+	static SemaphoreHandle_t semaphore1;
 
 	param1->sensor1 = sensor1;
 	param2->sensor1 = sensor2;
 
 	param3->xMessageBuffer1 = xMessageBuffer1;
-	param3->semaphore1 = semaphore1;
+	//param3->semaphore1 = semaphore1;
 	
 	param4->sensor1 = sensor1;
 	param4->sensor2 = sensor2;
 	param4->xMessageBuffer1 = xMessageBuffer1;
-	param4->semaphore1 = semaphore1;
+	//param4->semaphore1 = semaphore1;
 
-	xEventGroup = xEventGroupCreate();
 	param1->eventGroup1 = xEventGroup;
 	param2->eventGroup1 = xEventGroup;
 	param3->eventGroup1 = xEventGroup;
-
-	xEventGroupSetBits(xEventGroup, BIT_0 | BIT_4);
-
 
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 
 	if( xQueue != NULL )
 	{
+		xSemaphore = xSemaphoreCreateMutex();
+		xSemaphoreGive(xSemaphore);
+
 		xTaskCreate(LoraDriverTask,
 			"LDT",
 			configMINIMAL_STACK_SIZE,
@@ -114,22 +119,20 @@ const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 			1,
 			NULL);
 
-		xTaskCreate(LoraDriverTask,
+		xTaskCreate(sensorTask1,
 			"S1",
 			configMINIMAL_STACK_SIZE,
-			param3,
+			param1,
 			1,
 			NULL);
 
-		xTaskCreate(LoraDriverTask,
+		xTaskCreate(sensorTask2,
 			"S2",
 			configMINIMAL_STACK_SIZE,
-			param3,
+			param2,
 			1,
 			NULL);
-		
-		xTimerStart( xTimer, 0 ); /* The scheduler has not started so use a block time of 0. */
-		
+
 		vTaskStartScheduler();
 	}
 

@@ -8,18 +8,16 @@
 #define BIT_4 ( 1<<4 )
 
 void sensorTask1(void* parameters) {
-
 	Param param = (Param) parameters;
 	Sensor sensor = param->sensor1;
-	uint16_t reading;
-	EventGroupHandle_t xEventGroup = param->eventGroup1;
-
+	//EventGroupHandle_t xEventGroup = param->eventGroup1;
 	EventBits_t eventBitsset = xEventGroupSetBits(xEventGroup, BIT_0);
 
 	while (1)
 	{
 		Measure(sensor);
 		eventBitsset;
+		vTaskDelay(500);
 	}
 
 	destroyParam(param);
@@ -31,7 +29,7 @@ void sensorTask2(void* parameters) {
 
 	Param param = (Param)parameters;
 	Sensor sensor = param->sensor1;
-	EventGroupHandle_t xEventGroup = param->eventGroup1;
+	//EventGroupHandle_t xEventGroup = param->eventGroup1;
 
 	EventBits_t eventBitsset = xEventGroupSetBits(xEventGroup, BIT_4);
 
@@ -39,6 +37,7 @@ void sensorTask2(void* parameters) {
 	{
 		Measure(sensor);
 		eventBitsset;
+		vTaskDelay(500);
 	}
 
 	destroyParam(param);

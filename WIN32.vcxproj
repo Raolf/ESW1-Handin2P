@@ -133,7 +133,6 @@
     <ClCompile Include="param.c" />
     <ClCompile Include="Run-time-stats-utils.c" />
     <ClCompile Include="Sensor.c" />
-    <ClCompile Include="Source.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\include\event_groups.h" />

@@ -1,1 +1,6 @@
-﻿  WIN32.vcxproj -> C:\Users\sebas\Downloads\FreeRTOSv10.3.0\FreeRTOS\Demo\WIN32-MSVC\.\Debug\RTOSDemo.exe
+﻿  LoraDriver.c
+  appController.c
+  main_blinky.c
+C:\Users\sebas\Downloads\FreeRTOSv10.3.0\FreeRTOS\Demo\WIN32-MSVC\main_blinky.c(68,18): warning C4189: 'xTimerPeriod': local variable is initialized but not referenced
+  Generating Code...
+  WIN32.vcxproj -> C:\Users\sebas\Downloads\FreeRTOSv10.3.0\FreeRTOS\Demo\WIN32-MSVC\.\Debug\RTOSDemo.exe

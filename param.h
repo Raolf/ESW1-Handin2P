@@ -5,6 +5,9 @@
 #include "semphr.h"
 #include <event_groups.h>
 
+EventGroupHandle_t xEventGroup;
+SemaphoreHandle_t xSemaphore;
+
 typedef struct ParamS {
 	Sensor sensor1;
 	Sensor sensor2;
